@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WPS 授权回调</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+      background: #eef1f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e3e8f0;
+      border-radius: 16px;
+      padding: 36px 44px;
+      text-align: center;
+      max-width: 420px;
+      box-shadow: 0 12px 32px rgba(15,18,26,.12);
+    }
+    h3 { font-size: 18px; color: #1f2430; margin-bottom: 10px; }
+    p { font-size: 14px; color: #7a8294; line-height: 1.7; }
+    .ok { color: #2e9e5b; }
+    .err { color: #e5484d; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h3 id="result">处理中…</h3>
+    <p id="detail">正在完成 WPS 账号授权。</p>
+  </div>
+  <script type="module" src="js/callback.js"></script>
+</body>
+</html>

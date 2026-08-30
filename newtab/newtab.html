@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>标签开视页 · WPS 日历工作台</title>
+  <link rel="stylesheet" href="css/base.css" />
+  <link rel="stylesheet" href="css/theme.css" />
+  <link rel="stylesheet" href="css/layout.css" />
+</head>
+<body>
+  <div class="page">
+    <!-- 顶部数字时钟 -->
+    <div id="clock" class="clock">
+      <div id="clock-time" class="clock-time">--:--</div>
+      <div id="clock-date" class="clock-date"></div>
+    </div>
+
+    <header class="search-bar">
+      <form id="search-form" autocomplete="off" class="search-form">
+        <span class="search-icon">🔍</span>
+        <input id="search-input" type="text" placeholder="输入关键词搜索…（按 / 快速聚焦）" spellcheck="false" />
+        <select id="engine-select" title="选择搜索引擎"></select>
+        <button type="submit" class="btn primary search-go">搜索</button>
+      </form>
+      <button id="open-settings" class="icon-btn" title="设置">⚙</button>
+    </header>
+
+    <!-- 小组件行（由 widgets.js 按用户配置动态渲染） -->
+    <section id="widgets-row" class="widgets-row"></section>
+
+    <main class="main">
+      <section class="nav-panel">
+        <div id="nav-tabs" class="nav-tabs"></div>
+        <div id="nav-grid" class="nav-grid"></div>
+        <input type="file" id="nav-import-file" accept=".json,application/json" style="display:none" />
+      </section>
+
+      <aside id="calendar-panel" class="calendar-panel">
+        <div class="cal-head-row">
+          <button id="cal-prev" class="cal-nav" title="上月">‹</button>
+          <span id="cal-head" class="cal-head"></span>
+          <button id="cal-next" class="cal-nav" title="下月">›</button>
+          <button id="cal-today" class="cal-today" title="回到今天">今</button>
+        </div>
+        <div id="cal-grid" class="cal-grid"></div>
+        <div class="day-head">
+          <span id="day-label" class="day-label"></span>
+          <span id="cal-status" class="cal-badge"></span>
+        </div>
+        <div id="day-list" class="day-list"></div>
+        <div class="cal-actions">
+          <button id="cal-add" class="btn primary">＋ 新建日程</button>
+          <button id="cal-open-wps" class="btn ghost">打开 WPS 日历</button>
+        </div>
+      </aside>
+    </main>
+
+    <div id="nav-modal" class="modal">
+      <div class="modal-box">
+        <h3>添加 / 编辑站点</h3>
+        <form id="nav-form">
+          <label>名称<input id="nav-title" type="text" placeholder="如：WPS 365" /></label>
+          <label>网址<input id="nav-url" type="text" placeholder="如：https://365.wps.cn" /></label>
+          <div class="modal-actions">
+            <button type="button" class="btn ghost" data-close="nav-modal">取消</button>
+            <button type="submit" class="btn primary">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="event-modal" class="modal">
+      <div class="modal-box">
+        <h3>新建 / 编辑日程</h3>
+        <form id="event-form">
+          <label>标题<input id="ev-title" type="text" placeholder="日程标题" /></label>
+          <label>日期<input id="ev-date" type="date" /></label>
+          <div class="row2">
+            <label>开始<input id="ev-start" type="time" /></label>
+            <label>结束<input id="ev-end" type="time" /></label>
+          </div>
+          <label>地点<input id="ev-location" type="text" placeholder="选填" /></label>
+          <label>备注<input id="ev-note" type="text" placeholder="选填" /></label>
+          <div class="modal-actions">
+            <button type="button" class="btn ghost" data-close="event-modal">取消</button>
+            <button type="submit" class="btn primary">保存</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="settings-panel" class="drawer">
+      <div class="drawer-head">
+        <span>设置</span>
+        <button id="close-settings" class="icon-btn">✕</button>
+      </div>
+      <div class="drawer-body">
+        <div class="field">
+          <label class="field-label">主题</label>
+          <select id="theme-select">
+            <option value="auto">跟随系统</option>
+            <option value="light">浅色</option>
+            <option value="dark">深色</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label">搜索引擎</label>
+          <div id="engine-manage-list" class="engine-manage-list"></div>
+          <div class="custom-engine-add">
+            <input id="ce-name" type="text" placeholder="引擎名称，如：360" />
+            <input id="ce-url" type="text" placeholder="搜索地址，如：https://www.so.com/s?q=" />
+            <button id="ce-add" type="button" class="btn primary">＋ 添加</button>
+          </div>
+          <p class="hint">
+            勾选引擎设为默认；自定义引擎可点 ✕ 删除。搜索地址以「?key=」结尾，插件会自动拼接关键词。
+          </p>
+        </div>
+        <div class="field">
+          <label class="field-label">天气城市</label>
+          <div class="city-row">
+            <input id="weather-city-input" type="text" placeholder="如：北京、上海，留空自动定位" />
+            <button id="city-apply" type="button" class="btn primary">应用</button>
+          </div>
+          <p class="hint" id="city-tip">填写后按该城市显示天气，留空则按网络 IP 自动定位。</p>
+        </div>
+        <div class="field">
+          <label class="field-label">小组件</label>
+          <div id="widget-manage-list" class="widget-manage-list"></div>
+          <div class="widget-add-row">
+            <select id="widget-add-select"></select>
+            <button id="widget-add-btn" type="button" class="btn primary">＋ 添加</button>
+          </div>
+          <p class="hint">选择下方未添加的小组件类型，点击「添加」加入页面；已添加的组件可点 ✕ 移除。</p>
+        </div>
+        <div class="field">
+          <label class="check"><input id="show-calendar" type="checkbox" /> 显示日历</label>
+        </div>
+        <div class="field">
+          <label class="field-label">WPS 日历</label>
+          <div class="wps-auth-row">
+            <span id="wps-auth-state" class="wps-state">检测中…</span>
+            <button id="wps-login" class="btn primary">登录授权</button>
+            <button id="wps-logout" class="btn ghost" style="display:none">退出登录</button>
+          </div>
+        </div>
+        <p class="hint">
+          点击「登录授权」会弹出 WPS 日历页面，用 WPS 账号登录后自动完成绑定，
+          无需填写任何 APPID；登录后可在插件内新增 / 编辑 / 删除日程并同步到 WPS 日历，
+          未登录时为本地模式（数据保存在本机）。
+        </p>
+      </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,12 @@
+# 系统与编辑器
+Thumbs.db
+.DS_Store
+*.swp
+
+# 敏感/会话文件
+*.txt.bak
+wps_sid*
+
+# 临时产物
+tmp_*
+*.log

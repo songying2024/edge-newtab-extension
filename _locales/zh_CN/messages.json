@@ -1,0 +1,10 @@
+{
+  "extensionName": {
+    "message": "标签开视页 · WPS 日历工作台",
+    "description": "扩展名称"
+  },
+  "extensionDescription": {
+    "message": "高效新标签页：多引擎搜索 + 快速导航 + WPS 日历日程（登录授权、插件内增删改、同步 WPS 日历）",
+    "description": "扩展描述"
+  }
+}
