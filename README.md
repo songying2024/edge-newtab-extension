@@ -15,7 +15,9 @@
   - 插件内**新增 / 编辑 / 删除**日程
   - 弹出页面登录 WPS 账号后**实时同步**到 WPS 日历（无需 APPID，个人 / 企业账号均可）
   - 未登录自动降级为本地模式，数据保存在本机
-- **个性化**：浅色 / 深色 / 跟随系统主题，日历显示开关
+- **小组件系统**：天气（近一周）/ 迷你日历（含农历）/ 待办清单 / 便签，设置中**自由添加 / 移除**，即时生效
+- **数字时钟**：黑体大号时间 + 日期星期
+- **个性化**：浅色 / 深色 / 跟随系统主题，天气城市设置，日历显示开关
 
 ---
 
@@ -65,20 +67,24 @@ edge-newtab-extension/
 ├── manifest.json              # MV3 清单（chrome_url_overrides 接管新标签页）
 ├── _locales/zh_CN/            # 多语言
 ├── newtab/
-│   ├── newtab.html            # 新标签页主页面
-│   ├── callback.html          # WPS OAuth 授权回调页
-│   ├── css/                   # base(组件) / theme(主题变量) / layout(布局)
+│   ├── newtab.html            # 新标签页主页面（时钟+小组件行+导航）
+│   ├── css/                   # base(组件) / theme(主题变量) / layout(布局+小组件)
 │   ├── js/
-│   │   ├── config.js          # ★ 配置入口（引擎 / 默认导航 / WPS 应用参数）
+│   │   ├── config.js          # ★ 配置入口（引擎 / 默认导航 / WPS 参数）
 │   │   ├── app.js             # 应用入口
 │   │   ├── storage.js         # chrome.storage 封装
+│   │   ├── clock.js           # 数字时钟
 │   │   ├── search.js          # 搜索模块
-│   │   ├── nav.js             # 导航模块
-│   │   ├── calendar.js        # 日历组件（本地 + WPS 双模式）
+│   │   ├── nav.js             # 导航模块（分组管理/导入导出）
+│   │   ├── calendar.js        # 日历组件（本地 + WPS 双模式 + 迷你日历）
+│   │   ├── weather.js         # 天气组件（城市定位 + IP 双源）
+│   │   ├── lunar.js           # 农历转换
+│   │   ├── widgets.js         # ★ 小组件注册表（自由增删）
+│   │   ├── widget-todo.js     # 待办清单小组件
+│   │   ├── widget-note.js     # 便签小组件
 │   │   ├── wps-auth.js        # WPS 会话授权（弹出登录 + chrome.cookies 读 wps_sid）
 │   │   ├── wps-api.js         # WPS 日历网页版内部接口（rili.kdocs.cn/g-api）
-│   │   ├── settings.js        # 设置面板
-│   │   └── callback.js        # （旧版 OAuth 回调，已弃用，可删除）
+│   │   └── settings.js        # 设置面板（引擎/天气城市/小组件/WPS）
 │   └── assets/icons/          # 扩展图标
 └── README.md
 ```
