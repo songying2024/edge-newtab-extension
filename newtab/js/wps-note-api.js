@@ -227,6 +227,13 @@ async function sha256Hex(buf) {
 
 /* ---------- 对外 API ---------- */
 
+/** 笔记内容页地址（www.kdocs.cn 个人版 / 365 版账号通用） */
+export function notePageUrl(fileId) {
+  return `https://www.kdocs.cn/l/${fileId}?page=home`;
+}
+
+export const NOTE_HOME_URL = "https://ainote.kdocs.cn/home/";
+
 /** 便签列表：[{ id(fileId), title, text, mtime }] */
 export async function listNotes() {
   const did = await getDriveId();

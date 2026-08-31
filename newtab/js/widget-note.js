@@ -7,9 +7,7 @@
  */
 import { store } from "./storage.js";
 import { wpsAuth } from "./wps-auth.js";
-import { listNotes, readNote, saveNote, deleteNote } from "./wps-note-api.js";
-
-const WPS_NOTE_URL = "https://ainote.kdocs.cn/home/";
+import { listNotes, readNote, saveNote, deleteNote, notePageUrl, NOTE_HOME_URL } from "./wps-note-api.js";
 
 const LOCAL_KEY = "noteItems"; // 本地模式：[{ id, text, mtime }]
 
@@ -28,8 +26,14 @@ export async function mountNote(container) {
 
   const listEl = container.querySelector(".note-list");
   const statusEl = container.querySelector(".note-status");
-  container.querySelector(".note-open-btn").addEventListener("click", () => {
-    chrome.tabs.create({ url: WPS_NOTE_URL });
+  container.querySelector(".note-open-btn").addEventListener("click", async () => {
+    // 点击直接进入笔记内容页：动态取当前登录账号的最新一条笔记，兼容个人版/365版
+    let url = NOTE_HOME_URL;
+    try {
+      const items = notes.length ? notes.map((n) => ({ id: n.id })) : await listNotes();
+      if (items.length && items[0].id) url = notePageUrl(items[0].id);
+    } catch (e) { /* 未登录或查询失败时打开笔记首页 */ }
+    chrome.tabs.create({ url });
   });
   const input = container.querySelector(".note-input");
   const addBtn = container.querySelector(".note-add-btn");
