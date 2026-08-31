@@ -9,7 +9,7 @@ import { store } from "./storage.js";
 import { wpsAuth } from "./wps-auth.js";
 import { listNotes, readNote, saveNote, deleteNote } from "./wps-note-api.js";
 
-const WPS_NOTE_URL = "https://365.kdocs.cn/l/cb1P29vgeHux?page=home";
+const WPS_NOTE_URL = "https://ainote.kdocs.cn/home/";
 
 const LOCAL_KEY = "noteItems"; // 本地模式：[{ id, text, mtime }]
 
