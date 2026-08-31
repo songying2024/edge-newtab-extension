@@ -144,6 +144,7 @@ async function submitForm() {
         await wpsApi.createEvent(toWpsPayload(payload));
       }
       await syncFromWps();
+      render(); // 新建/编辑同步后立即重绘，展开的日历面板即时更新
     } catch (e) {
       alert("同步到 WPS 失败：" + e.message + "\n已改存本地。");
       await upsertLocal(payload);
@@ -173,6 +174,7 @@ async function removeEvent(ev) {
     try {
       await wpsApi.deleteEvent(ev.id);
       await syncFromWps();
+      render(); // 同步后立即重绘，删除即时生效
       return;
     } catch (e) {
       alert("删除 WPS 日程失败：" + e.message);
