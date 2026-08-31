@@ -14,12 +14,6 @@ async function boot() {
   const settings = await store.get("settings");
   await applyTheme(settings.theme);
 
-  // 日历显示开关生效：关闭时隐藏日历小组件与完整日历
-  if (!settings.showCalendar) {
-    const panel = document.getElementById("calendar-panel");
-    if (panel) panel.style.display = "none";
-  }
-
   // 点击弹层背景关闭
   document.querySelectorAll(".modal").forEach((m) => {
     m.addEventListener("click", (e) => {
@@ -29,11 +23,6 @@ async function boot() {
 
   initClock();
   await initWidgets();
-  if (!settings.showCalendar) {
-    document.querySelectorAll('#widgets-row [data-widget-type="minical"]').forEach((el) => {
-      el.style.display = "none";
-    });
-  }
   initSearch();
   await initNav();
   await initCalendar();

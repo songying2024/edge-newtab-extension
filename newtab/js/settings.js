@@ -1,10 +1,10 @@
 /**
  * settings.js — 设置面板
- * 主题（浅/深/跟随系统）、日历显示开关、WPS 登录状态与登出。
+ * 主题（浅/深/跟随系统）、搜索引擎、天气城市、小组件管理。
+ * WPS 日历登录不在设置中，直接进日历组件面板「登录 WPS 日历」完成。
  */
 import { CONFIG, buildEngines } from "./config.js";
 import { store } from "./storage.js";
-import { wpsAuth } from "./wps-auth.js";
 import { reloadWeather } from "./weather.js";
 
 const THEMES = ["auto", "light", "dark"];
@@ -21,7 +21,6 @@ export function initSettings() {
   const closeBtn = document.getElementById("close-settings");
 
   openBtn.addEventListener("click", async () => {
-    await refreshAuthStatus();
     refreshWidgetState();
     panel.classList.add("open");
   });
@@ -248,44 +247,6 @@ export function initSettings() {
     if (cityApply) cityApply.addEventListener("click", applyCity);
   }
 
-  // 日历显示开关（默认收起完整日历；关闭时隐藏迷你日历与完整日历）
-  const calToggle = document.getElementById("show-calendar");
-  store.get("settings").then((s) => (calToggle.checked = s.showCalendar));
-  calToggle.addEventListener("change", async (e) => {
-    await store.patch("settings", { showCalendar: e.target.checked });
-    const mini = document.getElementById("mini-cal");
-    const panel = document.getElementById("calendar-panel");
-    if (mini) mini.style.display = e.target.checked ? "" : "none";
-    if (!e.target.checked && panel) panel.style.display = "none";
-  });
-
-  // WPS 登录 / 登出
-  const loginBtn = document.getElementById("wps-login");
-  const logoutBtn = document.getElementById("wps-logout");
-  loginBtn.addEventListener("click", async () => {
-    const sid = await wpsAuth.login();
-    if (sid) {
-      // 登录成功：刷新页面让日历进入 WPS 同步模式
-      location.reload();
-    } else {
-      alert("未检测到登录会话。\n\n请在刚才弹出的 WPS 日历页面中用 WPS 账号完成登录，登录成功后刷新本页即可同步。");
-    }
-  });
-  logoutBtn.addEventListener("click", async () => {
-    await wpsAuth.logout();
-    await refreshAuthStatus();
-    location.reload();
-  });
-}
-
-async function refreshAuthStatus() {
-  const ok = await wpsAuth.isAuthorized();
-  const state = document.getElementById("wps-auth-state");
-  const loginBtn = document.getElementById("wps-login");
-  const logoutBtn = document.getElementById("wps-logout");
-  state.textContent = ok ? "已登录 · 同步 WPS 日历" : "未登录 · 本地模式";
-  loginBtn.style.display = ok ? "none" : "";
-  logoutBtn.style.display = ok ? "" : "none";
 }
 
 export { CONFIG };
