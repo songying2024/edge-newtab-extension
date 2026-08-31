@@ -672,15 +672,25 @@
 .widget-todo .todo-list {
   flex: 1;
   overflow-y: auto;
-  max-height: 120px;
+  max-height: 130px;
   min-height: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 2px;
 }
 .todo-row {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 2px;
+  gap: 8px;
+  padding: 6px 8px;
   font-size: 12px;
+  border-radius: 8px;
+  background: var(--widget-row, rgba(127, 127, 127, 0.06));
+  transition: background 0.15s;
+}
+.todo-row:hover {
+  background: rgba(127, 127, 127, 0.1);
 }
 .todo-row.done .todo-text {
   text-decoration: line-through;
@@ -689,6 +699,9 @@
 .todo-row input[type="checkbox"] {
   accent-color: var(--accent);
   flex: none;
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
 }
 .todo-text {
   flex: 1;
@@ -701,9 +714,9 @@
   border: none;
   background: transparent;
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   cursor: pointer;
-  padding: 2px 4px;
+  padding: 2px 6px;
   border-radius: 50%;
   opacity: 0;
   transition: opacity 0.15s;
@@ -713,50 +726,78 @@
 }
 .todo-del:hover {
   color: #e5484d;
+  background: rgba(229, 72, 77, 0.1);
 }
 .todo-add {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   margin-top: 8px;
 }
 .todo-input {
   flex: 1;
   min-width: 0;
   font-size: 12px;
-  padding: 4px 8px;
+  padding: 5px 9px;
+  border-radius: 8px;
 }
 .todo-add-btn {
   border: none;
   background: var(--accent);
   color: #fff;
   border-radius: 8px;
-  width: 26px;
+  width: 28px;
+  flex: none;
   font-size: 15px;
   cursor: pointer;
+  transition: opacity 0.15s;
+}
+.todo-add-btn:hover {
+  opacity: 0.85;
 }
 
-/* ---------- 便签小组件 ---------- */
+/* ---------- 便签小组件（浅黄纸感） ---------- */
 .widget-note {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  background: #fdf6d8;
+  border-color: #f0e3ae;
+  position: relative;
+}
+.widget-note::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 14px;
+  right: 14px;
+  height: 14px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.05), rgba(0, 0, 0, 0));
+  border-radius: 0 0 8px 8px;
+  pointer-events: none;
+}
+.widget-note .widget-head {
+  color: #8a6d1f;
+  font-weight: 600;
 }
 .note-area {
   flex: 1;
   min-height: 70px;
   resize: none;
-  border: 1px solid var(--border);
+  border: none;
   border-radius: 8px;
   background: transparent;
-  color: var(--text);
+  color: #5c4a17;
   font-size: 12px;
-  line-height: 1.5;
+  line-height: 1.6;
   padding: 6px 8px;
   font-family: inherit;
 }
+.note-area::placeholder {
+  color: rgba(138, 109, 31, 0.5);
+}
 .note-area:focus {
   outline: none;
-  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 /* ---------- 设置面板：小组件管理 ---------- */

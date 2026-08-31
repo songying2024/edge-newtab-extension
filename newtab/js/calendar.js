@@ -168,8 +168,56 @@ async function upsertLocal(payload) {
   await saveLocal();
 }
 
+/* ---------- 自定义确认弹窗（替代原生 confirm，UI 更美观） ---------- */
+function confirmDialog({ title = "确认", msg = "", okText = "确定", danger = false } = {}) {
+  return new Promise((resolve) => {
+    const modal = document.getElementById("confirm-modal");
+    const titleEl = document.getElementById("confirm-title");
+    const msgEl = document.getElementById("confirm-msg");
+    const okBtn = document.getElementById("confirm-ok");
+    const cancelBtn = document.getElementById("confirm-cancel");
+    if (!modal || !okBtn || !cancelBtn) {
+      resolve(true);
+      return;
+    }
+    titleEl.textContent = title;
+    msgEl.textContent = msg;
+    okBtn.textContent = okText;
+    okBtn.classList.toggle("danger", danger);
+    okBtn.classList.toggle("primary", !danger);
+    modal.classList.add("open");
+    okBtn.focus();
+
+    function done(val) {
+      modal.classList.remove("open");
+      okBtn.removeEventListener("click", onOk);
+      cancelBtn.removeEventListener("click", onCancel);
+      modal.removeEventListener("click", onBackdrop);
+      resolve(val);
+    }
+    function onOk() {
+      done(true);
+    }
+    function onCancel() {
+      done(false);
+    }
+    function onBackdrop(e) {
+      if (e.target === modal) done(false);
+    }
+    okBtn.addEventListener("click", onOk);
+    cancelBtn.addEventListener("click", onCancel);
+    modal.addEventListener("click", onBackdrop);
+  });
+}
+
 async function removeEvent(ev) {
-  if (!confirm(`删除日程「${ev.title}」？`)) return;
+  const ok = await confirmDialog({
+    title: "删除日程",
+    msg: `确定删除日程「${ev.title}」？`,
+    okText: "删除",
+    danger: true,
+  });
+  if (!ok) return;
   if (authorized && ev.wps) {
     try {
       await wpsApi.deleteEvent(ev.id);
