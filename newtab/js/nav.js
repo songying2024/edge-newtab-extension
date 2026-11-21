@@ -8,22 +8,30 @@ import { store } from "./storage.js";
 let groups = [];
 let currentGroupId = null;
 
-/** 站点 favicon：优先 chrome://favicon，失败回退首字母占位 */
+/** 站点 favicon：chrome://favicon（本机缓存）→ 在线图标服务 → 首字母占位 */
 function faviconFor(url, title) {
   const box = document.createElement("span");
   box.className = "item-icon";
   const img = new Image();
   img.className = "item-favicon";
-  img.src = chrome.runtime.getURL(
-    `_favicon/?pageUrl=${encodeURIComponent(url)}&size=32`
-  );
-  img.onerror = () => {
-    img.replaceWith(letterEl(title));
+
+  let host = "";
+  try { host = new URL(url).hostname; } catch (e) { /* ignore */ }
+  const sources = [
+    chrome.runtime.getURL(`_favicon/?pageUrl=${encodeURIComponent(url)}&size=32`),
+    `https://favicon.im/${host}?larger=true`,
+    `https://api.iowen.cn/favicon/${host}.png`,
+  ];
+  let idx = 0;
+  const tryNext = () => {
+    if (idx < sources.length) img.src = sources[idx++];
+    else img.replaceWith(letterEl(title));
   };
-  // 个别场景下返回占位图但无法显示，直接等加载完检查
+  img.onerror = tryNext;
   img.onload = () => {
-    if (img.naturalWidth === 0) img.replaceWith(letterEl(title));
+    if (img.naturalWidth === 0) tryNext();
   };
+  tryNext();
   box.appendChild(img);
   return box;
 }
